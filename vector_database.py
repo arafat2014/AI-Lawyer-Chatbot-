@@ -17,7 +17,7 @@ def load_pdf(file_path):
     return documents
 
 # Load a sample file
-file_path ='udhr_booklet_en_web.pdf'
+file_path ='universal_declaration_of_human_rights.pdf'
 documents = documents = load_pdf(file_path)
 #print(len(documents))
 
@@ -31,4 +31,18 @@ def split_into_chunks(documents, chunk_size=1000, overlap=200):
     return splitter.split_documents(documents)
 
 text_chunks = split_into_chunks(documents)
-print("Chunks count: ", len(text_chunks))
+#print("Chunks count: ", len(text_chunks))
+
+#Get Embedding Model (DeepSeek R1 via Ollama)
+ollama_model_name = "deepseek-r1:14b"
+
+def get_embedding_model(ollama_model_name):
+    embeddings = OllamaEmbeddings(model=ollama_model_name)
+    return embeddings
+
+embedding_model = get_embedding_model(ollama_model_name)
+
+#Store Embeddings in FAISS
+VECTOR_DB_PATH = "vectorstore/db_faiss"
+vector_store = FAISS.from_documents(text_chunks, embedding_model)
+vector_store.save_local(VECTOR_DB_PATH)
