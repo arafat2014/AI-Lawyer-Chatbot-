@@ -19,4 +19,16 @@ def load_pdf(file_path):
 # Load a sample file
 file_path ='udhr_booklet_en_web.pdf'
 documents = documents = load_pdf(file_path)
-print(len(documents))
+#print(len(documents))
+
+# Split into Chunks
+def split_into_chunks(documents, chunk_size=1000, overlap=200):
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=overlap,
+        add_start_index=True
+    )
+    return splitter.split_documents(documents)
+
+text_chunks = split_into_chunks(documents)
+print("Chunks count: ", len(text_chunks))
