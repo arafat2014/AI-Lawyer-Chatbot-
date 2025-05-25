@@ -43,6 +43,6 @@ def get_embedding_model(ollama_model_name):
 embedding_model = get_embedding_model(ollama_model_name)
 
 #Store Embeddings in FAISS
-VECTOR_DB_PATH = "vectorstore/db_faiss"
-vector_store = FAISS.from_documents(text_chunks, embedding_model)
-vector_store.save_local(VECTOR_DB_PATH)
+FAISS_DB_PATH="vectorstore/db_faiss"
+faiss_db=FAISS.from_documents(text_chunks, get_embedding_model(ollama_model_name))
+faiss_db.save_local(FAISS_DB_PATH)
