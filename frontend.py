@@ -11,7 +11,21 @@ user_query = st.text_area(
     placeholder="Type your question here...",
     height=120
 )
+submit_question = st.button("Ask the AI Lawyer")
 
+if submit_question:
 
+    if uploaded_file:
 
+        # Display user's question in the chat
+        st.chat_message("user").write(user_query)
 
+        # Run RAG pipeline to fetch and respond
+        docs = retrieve_docs(user_query)
+        answer = answer_query(documents=docs, model=llm_model, query=user_query)
+
+        # Display AI's response
+        st.chat_message("AI Lawyer").write(answer)
+
+    else:
+        st.error("Please upload a PDF document before asking a question.")
