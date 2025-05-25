@@ -8,3 +8,9 @@ load_dotenv()
 # Step 1: Setup LLM (DeepSeek R1 via Groq)
 llm_model=ChatGroq(model="deepseek-r1-distill-llama-70b")
 
+# Step 2: Retrieve Documents
+def retrieve_docs(query: str):
+    """
+    Perform similarity search on the vector database using the user query.
+    """
+    return faiss_db.similarity_search(query)
