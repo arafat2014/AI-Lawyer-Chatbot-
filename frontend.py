@@ -1,3 +1,4 @@
+from rag_pipeline import answer_query, retrieve_docs, llm_model
 # Step 1: Add functionality to upload PDF files
 import streamlit as st
 
