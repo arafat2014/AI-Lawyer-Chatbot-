@@ -1,32 +1,41 @@
 from rag_pipeline import answer_query, retrieve_docs, llm_model
-# Step 1: Add functionality to upload PDF files
 import streamlit as st
 
-uploaded_file = st.file_uploader("Upload PDF",
-                                 type="pdf",
-                                 accept_multiple_files=False)
+# --- Page config ---
+st.set_page_config(page_title="AI Legal Assistant", page_icon="⚖️", layout="centered")
 
-# Step 2: Set up the chatbot's question-answer logic
-user_query = st.text_area(
-    label="💬 What's on your mind?",
-    placeholder="Type your question here...",
-    height=120
+st.title("⚖️ AskLex R1 – Your AI Legal Assistant")
+
+# --- Upload section ---
+st.markdown("### 📄 Upload a Legal PDF")
+uploaded_file = st.file_uploader(
+    "Drop your legal document here...",
+    type="pdf",
+    help="Upload a legal contract, declaration, or policy document."
 )
-submit_question = st.button("Ask the AI Lawyer")
 
+st.markdown("---")
+
+# --- Chat section ---
+st.markdown("### 💬 Ask a Question")
+user_query = st.text_area(
+    label="What's on your mind?",
+    placeholder="e.g., What rights are mentioned in this document?",
+    height=100,
+    label_visibility="collapsed"
+)
+
+submit_question = st.button("🧠 Ask the AI Lawyer")
+
+# --- Chat logic ---
 if submit_question:
-
-    if uploaded_file:
-
-        # Display user's question in the chat
-        st.chat_message("user").write(user_query)
-
-        # Run RAG pipeline to fetch and respond
-        docs = retrieve_docs(user_query)
-        answer = answer_query(documents=docs, model=llm_model, query=user_query)
-
-        # Display AI's response
-        st.chat_message("AI Lawyer").write(answer)
-
+    if uploaded_file and user_query.strip():
+        with st.spinner("🧠 Thinking..."):
+            st.chat_message("user").markdown(f"**You:** {user_query}")
+            docs = retrieve_docs(user_query)
+            answer = answer_query(documents=docs, model=llm_model, query=user_query)
+            st.chat_message("assistant").markdown(f"**AI Lawyer:** {answer}")
+    elif not uploaded_file:
+        st.error("❗ Please upload a PDF document before asking a question.")
     else:
-        st.error("Please upload a PDF document before asking a question.")
+        st.warning("⚠️ Please enter a valid question.")
